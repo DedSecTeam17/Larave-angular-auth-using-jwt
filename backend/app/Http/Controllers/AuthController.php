@@ -2,6 +2,9 @@
 
     namespace App\Http\Controllers;
 
+    use App\Http\Requests\UserRequests\UserRequest;
+    use App\User;
+    use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Auth;
     use App\Http\Controllers\Controller;
 
@@ -14,7 +17,7 @@
          */
         public function __construct()
         {
-            $this->middleware('auth:api', ['except' => ['login']]);
+            $this->middleware('auth:api', ['except' => ['login','signup']]);
         }
 
         /**
@@ -27,10 +30,27 @@
             $credentials = request(['email', 'password']);
 
             if (! $token = auth()->attempt($credentials)) {
-                return response()->json(['error' => 'Unauthorized'], 401);
+                return response()->json(['error' => 'Email or password not exist'], 401);
             }
 
             return $this->respondWithToken($token);
+        }
+
+
+        public  function  signup(UserRequest $request){
+
+
+            $user = new User([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password)
+            ]);
+            return User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' =>bcrypt($request->password),
+            ]);
+
         }
 
         /**
