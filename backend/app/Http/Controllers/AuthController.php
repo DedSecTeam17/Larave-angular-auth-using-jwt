@@ -40,16 +40,14 @@
         public  function  signup(UserRequest $request){
 
 
-            $user = new User([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password)
-            ]);
-            return User::create([
+
+            User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' =>bcrypt($request->password),
             ]);
+
+            return $this->login($request);
 
         }
 
