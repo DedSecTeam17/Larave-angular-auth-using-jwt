@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -10,14 +11,17 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class RestPasswordMail extends Mailable
 {
     use Queueable, SerializesModels;
+    public  $token;
 
     /**
      * Create a new message instance.
      *
-     * @return void
+     * @param $token
      */
-    public function __construct()
+    public function __construct($token)
     {
+
+        $this->token=$token;
         //
     }
 
@@ -28,6 +32,6 @@ class RestPasswordMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('Email.passwordReset');
+        return $this->markdown('Email.passwordReset')->with(['token'=>$this->token]);
     }
 }
